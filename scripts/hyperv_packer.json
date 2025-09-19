@@ -1,0 +1,112 @@
+{
+  "variables": {
+    "vm_name": "windows-11-dev-hyperv",
+    "iso_path": "C:/ISOs/Win11_24H2_English_x64.iso",
+    "iso_checksum": "sha256:your-iso-checksum-here",
+    "output_directory": "./output-hyperv",
+    "vm_memory": "4096",
+    "vm_cpus": "2",
+    "disk_size": "40000",
+    "switch_name": "Default Switch"
+  },
+  "builders": [
+    {
+      "type": "hyperv-iso",
+      "vm_name": "{{user `vm_name`}}",
+      "iso_url": "{{user `iso_path`}}",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "memory": "{{user `vm_memory`}}",
+      "cpus": "{{user `vm_cpus`}}",
+      "disk_size": "{{user `disk_size`}}",
+      "disk_block_size": "1",
+      "generation": 2,
+      "guest_additions_mode": "disable",
+      "switch_name": "{{user `switch_name`}}",
+      "boot_order": ["SCSI:0:0"],
+      "boot_wait": "3m",
+      "communicator": "winrm",
+      "winrm_username": "Administrator",
+      "winrm_password": "packer",
+      "winrm_timeout": "4h",
+      "winrm_use_ssl": false,
+      "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
+      "shutdown_timeout": "30m",
+      "cd_files": [
+        "./scripts/hyperv-autounattend.xml",
+        "./scripts/enable-winrm.ps1",
+        "./scripts/disable-winrm.ps1"
+      ],
+      "configuration_version": "8.0",
+      "differencing_disk": false,
+      "use_legacy_network_adapter": false,
+      "enable_mac_spoofing": true,
+      "enable_dynamic_memory": true,
+      "enable_checkpoints": false,
+      "enable_virtualization_extensions": true,
+      "temp_path": "./tmp"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "powershell",
+      "elevated_user": "Administrator",
+      "elevated_password": "packer",
+      "pause_before": "60s",
+      "scripts": [
+        "./scripts/disable-uac.ps1",
+        "./scripts/install-chocolatey.ps1"
+      ]
+    },
+    {
+      "type": "powershell",
+      "elevated_user": "Administrator",
+      "elevated_password": "packer",
+      "environment_vars": [
+        "CHOCO_INSTALL_TIMEOUT=7200"
+      ],
+      "scripts": [
+        "./scripts/install-hyperv-dev-tools.ps1"
+      ]
+    },
+    {
+      "type": "windows-restart",
+      "restart_timeout": "20m"
+    },
+    {
+      "type": "powershell",
+      "elevated_user": "Administrator",
+      "elevated_password": "packer",
+      "scripts": [
+        "./scripts/configure-hyperv-windows.ps1",
+        "./scripts/install-wsl-hyperv.ps1"
+      ]
+    },
+    {
+      "type": "windows-restart",
+      "restart_timeout": "20m"
+    },
+    {
+      "type": "powershell",
+      "elevated_user": "Administrator",
+      "elevated_password": "packer",
+      "scripts": [
+        "./scripts/configure-development-environment.ps1",
+        "./scripts/hyperv-cleanup.ps1"
+      ]
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "manifest",
+      "output": "{{user `output_directory`}}/hyperv-manifest.json",
+      "strip_path": true,
+      "custom_data": {
+        "build_time": "{{timestamp}}",
+        "build_name": "{{user `vm_name`}}",
+        "hypervisor": "Hyper-V",
+        "windows_version": "Windows 11 Pro",
+        "generation": "2"
+      }
+    }
+  ]
+}

@@ -1,0 +1,150 @@
+{
+  "variables": {
+    "vm_name": "windows-11-dev-virtualbox",
+    "iso_path": "C:/ISOs/Win11_24H2_English_x64.iso",
+    "iso_checksum": "sha256:your-iso-checksum-here",
+    "output_directory": "./output-virtualbox",
+    "vm_memory": "4096",
+    "vm_cpus": "2",
+    "disk_size": "40000",
+    "headless": "false"
+  },
+  "builders": [
+    {
+      "type": "virtualbox-iso",
+      "vm_name": "{{user `vm_name`}}",
+      "output_directory": "{{user `output_directory`}}",
+      "iso_url": "{{user `iso_path`}}",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "guest_os_type": "Windows11_64",
+      "memory": "{{user `vm_memory`}}",
+      "cpus": "{{user `vm_cpus`}}",
+      "disk_size": "{{user `disk_size`}}",
+      "hard_drive_interface": "sata",
+      "sata_port_count": 30,
+      "nvme_port_count": 1,
+      "hard_drive_nonrotational": true,
+      "hard_drive_discard": true,
+      "iso_interface": "sata",
+      "headless": "{{user `headless`}}",
+      "boot_wait": "3m",
+      "boot_keygroup_interval": "1s",
+      "communicator": "winrm",
+      "winrm_username": "Administrator",
+      "winrm_password": "packer",
+      "winrm_timeout": "4h",
+      "winrm_use_ssl": false,
+      "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
+      "shutdown_timeout": "30m",
+      "floppy_files": [
+        "./scripts/virtualbox-autounattend.xml",
+        "./scripts/enable-winrm.ps1",
+        "./scripts/disable-winrm.ps1"
+      ],
+      "vboxmanage": [
+        ["modifyvm", "{{.Name}}", "--firmware", "efi"],
+        ["modifyvm", "{{.Name}}", "--chipset", "ich9"],
+        ["modifyvm", "{{.Name}}", "--vram", "256"],
+        ["modifyvm", "{{.Name}}", "--graphicscontroller", "vmsvga"],
+        ["modifyvm", "{{.Name}}", "--accelerate3d", "on"],
+        ["modifyvm", "{{.Name}}", "--accelerate2dvideo", "on"],
+        ["modifyvm", "{{.Name}}", "--clipboard-mode", "bidirectional"],
+        ["modifyvm", "{{.Name}}", "--draganddrop", "bidirectional"],
+        ["modifyvm", "{{.Name}}", "--nested-hw-virt", "on"],
+        ["modifyvm", "{{.Name}}", "--vtxvpid", "on"],
+        ["modifyvm", "{{.Name}}", "--vtxux", "on"],
+        ["modifyvm", "{{.Name}}", "--paravirtprovider", "hyperv"],
+        ["modifyvm", "{{.Name}}", "--audio-driver", "dsound"],
+        ["modifyvm", "{{.Name}}", "--audiocontroller", "hda"],
+        ["modifyvm", "{{.Name}}", "--usb", "on"],
+        ["modifyvm", "{{.Name}}", "--usbehci", "on"],
+        ["modifyvm", "{{.Name}}", "--usbxhci", "on"],
+        ["modifyvm", "{{.Name}}", "--nictype1", "82540EM"],
+        ["modifyvm", "{{.Name}}", "--nic1", "nat"],
+        ["modifyvm", "{{.Name}}", "--natpf1", "winrm,tcp,,55985,,5985"],
+        ["storagectl", "{{.Name}}", "--name", "SATA Controller", "--hostiocache", "on"]
+      ],
+      "vboxmanage_post": [
+        ["modifyvm", "{{.Name}}", "--natpf1", "delete", "winrm"]
+      ],
+      "export_opts": [
+        "--manifest",
+        "--vsys", "0",
+        "--description", "Windows 11 Development Environment - VirtualBox",
+        "--version", "1.0.0"
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "powershell",
+      "elevated_user": "Administrator",
+      "elevated_password": "packer",
+      "pause_before": "60s",
+      "scripts": [
+        "./scripts/disable-uac.ps1",
+        "./scripts/install-chocolatey.ps1"
+      ]
+    },
+    {
+      "type": "powershell",
+      "elevated_user": "Administrator",
+      "elevated_password": "packer",
+      "environment_vars": [
+        "CHOCO_INSTALL_TIMEOUT=7200"
+      ],
+      "scripts": [
+        "./scripts/install-virtualbox-guest-additions.ps1",
+        "./scripts/install-virtualbox-dev-tools.ps1"
+      ]
+    },
+    {
+      "type": "windows-restart",
+      "restart_timeout": "20m"
+    },
+    {
+      "type": "powershell",
+      "elevated_user": "Administrator",
+      "elevated_password": "packer",
+      "scripts": [
+        "./scripts/configure-virtualbox-windows.ps1",
+        "./scripts/install-wsl-virtualbox.ps1"
+      ]
+    },
+    {
+      "type": "windows-restart",
+      "restart_timeout": "20m"
+    },
+    {
+      "type": "powershell",
+      "elevated_user": "Administrator",
+      "elevated_password": "packer",
+      "scripts": [
+        "./scripts/configure-development-environment.ps1",
+        "./scripts/virtualbox-cleanup.ps1"
+      ]
+    }
+  ],
+  "post-processors": [
+    [
+      {
+        "type": "vagrant",
+        "output": "{{user `output_directory`}}/{{user `vm_name`}}.box",
+        "vagrantfile_template": "./templates/Vagrantfile.virtualbox.template",
+        "compression_level": 9
+      },
+      {
+        "type": "manifest",
+        "output": "{{user `output_directory`}}/virtualbox-manifest.json",
+        "strip_path": true,
+        "custom_data": {
+          "build_time": "{{timestamp}}",
+          "build_name": "{{user `vm_name`}}",
+          "hypervisor": "VirtualBox",
+          "windows_version": "Windows 11 Pro",
+          "vagrant_box": true
+        }
+      }
+    ]
+  ]
+}
