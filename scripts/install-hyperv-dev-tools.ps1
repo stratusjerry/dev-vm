@@ -4,6 +4,7 @@ Write-Output "Installing development tools for Hyper-V..."
 # Core development tools
 choco install -y git
 #choco install -y nodejs --version 18.17.0
+#choco install -y nodejs-lts
 choco install -y python3
 choco install -y vscode
 #choco install -y docker-desktop
