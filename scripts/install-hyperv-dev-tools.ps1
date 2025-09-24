@@ -6,23 +6,23 @@ choco install -y git
 choco install -y nodejs --version 18.17.0
 choco install -y python3
 choco install -y vscode
-choco install -y docker-desktop
+#choco install -y docker-desktop
 choco install -y notepadplusplus
 choco install -y 7zip
 choco install -y googlechrome
 choco install -y firefox
-choco install -y postman
+#choco install -y postman
 
 # Cloud and DevOps tools
-choco install -y azure-cli
+#choco install -y azure-cli
 choco install -y terraform
 choco install -y kubernetes-cli
 choco install -y helm
 choco install -y awscli
 
 # Database tools
-choco install -y sql-server-management-studio
-choco install -y dbeaver
+#choco install -y sql-server-management-studio
+#choco install -y dbeaver
 
 # Hyper-V specific tools
 choco install -y powershell-core
