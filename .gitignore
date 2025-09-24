@@ -11,3 +11,6 @@ output/
 # Packer files
 *.exe
 LICENSE.txt
+*.iso
+tmp/
+packer_cache/

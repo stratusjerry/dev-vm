@@ -23,5 +23,7 @@ Get-FileHash C:\Users\Jerry\Downloads\Win11_24H2_English_x64.iso -Algorithm SHA2
 
 TODO: Run `packer build`
 ```powershell
-#packer build hyperv_packer.json
+.\packer plugins install github.com/hashicorp/hyperv
+mkdir tmp
+.\packer build hyperv_packer.json
 ```

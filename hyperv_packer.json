@@ -1,7 +1,7 @@
 {
   "variables": {
     "vm_name": "windows-11-dev-hyperv",
-    "iso_path": "C:/ISOs/Win11_24H2_English_x64.iso",
+    "iso_path": "./Win11_24H2_English_x64.iso",
     "iso_checksum": "B56B911BF18A2CEAEB3904D87E7C770BDF92D3099599D61AC2497B91BF190B11",
     "output_directory": "./output-hyperv",
     "vm_memory": "4096",
@@ -41,7 +41,6 @@
       "use_legacy_network_adapter": false,
       "enable_mac_spoofing": true,
       "enable_dynamic_memory": true,
-      "enable_checkpoints": false,
       "enable_virtualization_extensions": true,
       "temp_path": "./tmp"
     }
