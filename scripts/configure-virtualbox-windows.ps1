@@ -21,4 +21,3 @@ Set-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "FontSmoothing" -Valu
 Set-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "FontSmoothingType" -Value 2
 
 Write-Output "VirtualBox Windows configuration completed"
-
