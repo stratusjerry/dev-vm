@@ -9,7 +9,7 @@ choco install -y vscode
 choco install -y notepadplusplus
 choco install -y 7zip
 choco install -y googlechrome
-choco install -y firefox
+#choco install -y firefox
 
 # VirtualBox doesn't support nested virtualization well, skip Docker Desktop
 Write-Output "Skipping Docker Desktop for VirtualBox - use Docker Toolbox or remote Docker instead"

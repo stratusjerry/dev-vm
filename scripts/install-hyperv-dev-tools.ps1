@@ -11,7 +11,7 @@ choco install -y vscode
 choco install -y notepadplusplus
 choco install -y 7zip
 choco install -y googlechrome
-choco install -y firefox
+#choco install -y firefox
 
 # Cloud and DevOps tools
 choco install -y terraform

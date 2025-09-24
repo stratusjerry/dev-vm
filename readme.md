@@ -4,6 +4,13 @@ How to automate the build/config of a Development environment Virtual Machine
 Assumes Host OS is Windows 11 x86_64
 
 From https://developer.hashicorp.com/packer/install download `packer_1.14.2_windows_amd64.zip` and extract the `packer.exe`
+```powershell
+$zipFile = "packer_1.14.2_windows_amd64.zip"
+$ProgressPreference = 'SilentlyContinue'
+Invoke-WebRequest "https://releases.hashicorp.com/packer/1.14.2/${zipFile}" -OutFile "$zipFile"
+Expand-Archive ".\${zipFile}" .\
+
+```
 
 ## Development VMs
 

@@ -2,6 +2,12 @@ output/
 
 *.tgz
 *.gz
+*.zip
+
 # IDE
 .idea
 .vscode
+
+# Packer files
+*.exe
+LICENSE.txt

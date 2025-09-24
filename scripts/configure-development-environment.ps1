@@ -18,8 +18,6 @@ Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
 Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
 
 $PowerShellModules = @(
-    'Az',
-    'ImportExcel',
     'PSReadLine',
     'Posh-Git',
     'PowerShellGet',
@@ -44,24 +42,21 @@ git config --global diff.tool vscode
 git config --global difftool.vscode.cmd 'code --wait --diff $LOCAL $REMOTE'
 
 # Configure npm global packages
-Write-Output "Installing global npm packages..."
-$NpmPackages = @(
-    '@angular/cli@latest',
-    'create-react-app@latest',
-    'typescript@latest',
-    'eslint@latest',
-    'prettier@latest',
-    'nodemon@latest',
-    'pm2@latest',
-    'http-server@latest',
-    'live-server@latest',
-    'json-server@latest'
-)
-
-foreach ($Package in $NpmPackages) {
-    Write-Output "Installing npm package: $Package"
-    npm install -g $Package
-}
+#Write-Output "Installing global npm packages..."
+#$NpmPackages = @(
+#    '@anthropic-ai/claude-code',
+#    '@angular/cli@latest',
+#    'create-react-app@latest',
+#    'typescript@latest',
+#    'eslint@latest',
+#    'prettier@latest',
+#    'json-server@latest'
+#)
+#
+#foreach ($Package in $NpmPackages) {
+#    Write-Output "Installing npm package: $Package"
+#    npm install -g $Package
+#}
 
 # Configure Python packages
 Write-Output "Installing Python packages..."
