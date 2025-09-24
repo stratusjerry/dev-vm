@@ -7,15 +7,10 @@ choco install -y microsoft-windows-terminal
 
 # Install additional development utilities
 Write-Output "Installing additional development tools..."
-choco install -y filezilla
+#choco install -y filezilla
 choco install -y putty
 choco install -y winscp
 choco install -y sysinternals
-#choco install -y fiddler
-#choco install -y wireshark
-#choco install -y redis-desktop-manager
-#choco install -y robo3t
-#choco install -y dbeaver
 
 # Install PowerShell modules
 Write-Output "Installing PowerShell modules..."
@@ -73,17 +68,18 @@ Write-Output "Installing Python packages..."
 python -m pip install --upgrade pip
 
 $PythonPackages = @(
+    'uv',
+    'ruff',
     'virtualenv',
     'pipenv',
-    'jupyter',
-    'pandas',
-    'numpy',
-    'matplotlib',
     'requests',
-    'flask',
-    'django',
-    'fastapi',
-    'pytest',
+    #'pandas',
+    #'matplotlib',
+    #'flask',
+    #'jupyter',
+    #'django',
+    #'fastapi',
+    #'pytest',
     'black',
     'flake8'
 )

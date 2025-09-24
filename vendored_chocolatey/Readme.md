@@ -9,7 +9,7 @@ Install Pre-Reqs may include
 Install-Package -Name ".\chocolatey.2.5.1.nupkg" -Force
 # Debug for if above fails
 Unblock-File .\chocolatey.2.5.1.nupkg
-set-executionpolicy remotesigned
+Set-ExecutionPolicy remotesigned
 mv .\chocolatey.2.5.1.nupkg .\chocolatey.2.5.1.nupkg.zip
 mkdir .\extract\
 Expand-Archive -Path .\chocolatey.2.5.1.nupkg.zip -DestinationPath .\extract\

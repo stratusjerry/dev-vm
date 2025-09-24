@@ -10,13 +10,11 @@ choco install -y notepadplusplus
 choco install -y 7zip
 choco install -y googlechrome
 choco install -y firefox
-#choco install -y postman
 
 # VirtualBox doesn't support nested virtualization well, skip Docker Desktop
 Write-Output "Skipping Docker Desktop for VirtualBox - use Docker Toolbox or remote Docker instead"
 
 # Cloud and DevOps tools
-#choco install -y azure-cli
 choco install -y terraform
 choco install -y kubernetes-cli
 choco install -y helm
@@ -24,7 +22,6 @@ choco install -y awscli
 
 # Database tools
 #choco install -y sql-server-management-studio
-#choco install -y dbeaver
 
 # VirtualBox-specific tools
 choco install -y powershell-core
